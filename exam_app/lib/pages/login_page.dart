@@ -1,18 +1,32 @@
 import 'package:exam_app/components/my_button.dart';
 import 'package:exam_app/components/my_text_field.dart';
+import 'package:exam_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final void Function()? onTap;
+  const LoginPage({super.key, required this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // auth service
+  final _auth = AuthService();
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   bool _obscureText = true;
+
+  // login method
+  void login() async {
+    try {
+      await _auth.loginEmailPassword(emailController.text, pwController.text);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   MyButton(
                     text: "LOGIN",
-                    onTap: () {},
+                    onTap: login,
                   ),
                   const SizedBox(
                     height: 20,
@@ -104,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 5,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: widget.onTap,
                         child: Text(
                           "Register Now",
                           style: TextStyle(

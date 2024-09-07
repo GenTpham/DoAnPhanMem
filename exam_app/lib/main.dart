@@ -1,10 +1,18 @@
-import 'package:exam_app/pages/login_page.dart';
-import 'package:exam_app/pages/register_page.dart';
+import 'package:exam_app/firebase_options.dart';
+import 'package:exam_app/pages/home_page.dart';
+import 'package:exam_app/pages/settings_page.dart';
+import 'package:exam_app/services/auth/auth_gate.dart';
+import 'package:exam_app/services/auth/login_or_register.dart';
 import 'package:exam_app/themes/theme_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  // Firebase setup
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
@@ -19,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: const AuthGate(),
       theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }

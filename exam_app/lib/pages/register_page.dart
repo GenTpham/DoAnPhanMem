@@ -3,11 +3,8 @@ import "package:exam_app/components/my_text_field.dart";
 import "package:flutter/material.dart";
 
 class RegisterPage extends StatefulWidget {
-  //final void Function()? onTap;
-  const RegisterPage({
-    super.key,
-    /*required this.onTap*/
-  });
+  final void Function()? onTap;
+  const RegisterPage({super.key, required this.onTap});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -120,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       width: 5,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: widget.onTap,
                       child: Text(
                         "LOGIN NOW",
                         style: TextStyle(
