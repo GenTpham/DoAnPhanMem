@@ -32,7 +32,7 @@ class MyTextField extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(12),
         ),
-        fillColor: Color.fromARGB(255, 198, 196, 196),
+        fillColor: const Color.fromARGB(255, 198, 196, 196),
         filled: true,
         hintText: hintText,
         hintStyle: TextStyle(

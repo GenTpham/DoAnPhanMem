@@ -1,4 +1,5 @@
 import 'package:exam_app/components/my_button.dart';
+import 'package:exam_app/components/my_loading_circle.dart';
 import 'package:exam_app/components/my_text_field.dart';
 import 'package:exam_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,22 @@ class _LoginPageState extends State<LoginPage> {
 
   // login method
   void login() async {
+    showLoadingCircle(context);
     try {
       await _auth.loginEmailPassword(emailController.text, pwController.text);
+      if (mounted) {
+        hideLoadingCircle(context);
+      }
     } catch (e) {
-      print(e.toString());
+      if (mounted) hideLoadingCircle(context);
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+          ),
+        );
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:exam_app/components/my_drawer_tile.dart';
+import 'package:exam_app/components/my_loading_circle.dart';
 import 'package:exam_app/pages/settings_page.dart';
 import 'package:exam_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class MyDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingsPage(),
+                      builder: (context) => const SettingsPage(),
                     ),
                   );
                 },
