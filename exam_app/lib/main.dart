@@ -1,4 +1,5 @@
 import 'package:exam_app/firebase_options.dart';
+import 'package:exam_app/pages/home_page.dart';
 import 'package:exam_app/services/auth/auth_gate.dart';
 import 'package:exam_app/themes/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
