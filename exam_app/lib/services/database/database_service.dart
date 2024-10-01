@@ -8,7 +8,7 @@ class DatabaseService {
 
   // Save user info
   Future<void> saveUserInfoInFirebase(
-      {required String name, required String email}) async {
+      {required String name, required String email, required String phone}) async {
     String uid = _auth.currentUser!.uid;
     String username = email.split('@')[0];
 
@@ -17,6 +17,7 @@ class DatabaseService {
       name: name,
       email: email,
       username: username,
+      phone: phone,
     );
     final userMap = user.toMap();
     await _db.collection("Users").doc(uid).set(userMap);

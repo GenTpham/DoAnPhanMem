@@ -21,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   final TextEditingController confirmPwController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   bool _obscureText = true;
 
   void register() async {
@@ -34,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
         await _db.saveUserInfoInFirebase(
           name: nameController.text,
           email: emailController.text,
+          phone: phoneController.text,
         );
       } catch (e) {
         if (mounted) hideLoadingCircle(context);
@@ -97,6 +99,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextField(
                     controller: nameController,
                     hintText: "Name",
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  MyTextField(
+                    controller: phoneController,
+                    hintText: "Phone",
                     obscureText: false,
                   ),
                   const SizedBox(

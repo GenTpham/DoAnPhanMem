@@ -5,22 +5,24 @@ class UserProfile {
   final String name;
   final String email;
   final String username;
+  final String phone;
 
   UserProfile({
     required this.uid,
     required this.name,
     required this.email,
     required this.username,
+    required this.phone,
   });
 
   // firebase -> app
   factory UserProfile.fromDocument(DocumentSnapshot doc) {
     return UserProfile(
-      uid: doc['uid'],
-      name: doc['name'],
-      email: doc['email'],
-      username: doc['username'],
-    );
+        uid: doc['uid'],
+        name: doc['name'],
+        email: doc['email'],
+        username: doc['username'],
+        phone: doc['phone']);
   }
 
   // app -> firebase
@@ -30,6 +32,7 @@ class UserProfile {
       'name': name,
       'email': email,
       'username': username,
+      'phone': phone,
     };
   }
 }

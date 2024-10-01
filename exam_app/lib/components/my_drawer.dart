@@ -1,5 +1,6 @@
 import 'package:exam_app/components/my_drawer_tile.dart';
 import 'package:exam_app/components/my_loading_circle.dart';
+import 'package:exam_app/pages/profile_page.dart';
 import 'package:exam_app/pages/settings_page.dart';
 import 'package:exam_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,12 @@ class MyDrawer extends StatelessWidget {
                 icon: Icons.person,
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(uid: _auth.getCurrentUid(),),
+                    ),
+                  );
                 },
               ),
               MyDrawerTile(
