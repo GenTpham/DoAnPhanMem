@@ -1,5 +1,7 @@
 import 'package:exam_app/components/my_drawer.dart';
 import 'package:flutter/material.dart';
+import 'create_class_page.dart';
+import 'go_to_class_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -58,14 +60,25 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.add_circle,
                         label: "Create Class",
                         onTap: () {
-                          // Create Class
+                          
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateClassPage(), 
+                            ),
+                          );
                         },
                       ),
                       _buildButton(
                         icon: Icons.school,
                         label: "Go to Class",
                         onTap: () {
-                          // Class
+                         Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GoToClassPage(),
+                            ),
+                         );
                         },
                       ),
                     ],
