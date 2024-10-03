@@ -29,8 +29,16 @@ class _CreateClassPageState extends State<CreateClassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF5268B6),
       appBar: AppBar(
-        title: Text('Create Class'),
+        title: const Text(
+            "CREATE CLASS",
+            style: TextStyle(
+              color: Color(0xFF5268B6),
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            )
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -41,7 +49,17 @@ class _CreateClassPageState extends State<CreateClassPage> {
             children: <Widget>[
               TextFormField(
                 controller: _maLopController,
-                decoration: InputDecoration(labelText: 'Class Code'),
+                decoration: InputDecoration(
+                  hintText: 'Class Code', 
+                  filled: true, 
+                  fillColor: Colors.white, 
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0), 
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Class Code';
@@ -49,9 +67,20 @@ class _CreateClassPageState extends State<CreateClassPage> {
                   return null;
                 },
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _tenLopController,
-                decoration: InputDecoration(labelText: 'Class Name'),
+                decoration: InputDecoration(
+                  hintText: 'Class Name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black), 
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Class Name';
@@ -64,19 +93,25 @@ class _CreateClassPageState extends State<CreateClassPage> {
                 children: [
                   Text(
                     'Day: ${DateFormat('yyyy-MM-dd').format(_ngayTao)}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 19, 
+                    ),
                   ),
                   Spacer(),
                   IconButton(
-                    icon: Icon(Icons.calendar_today),
+                    icon: Icon(Icons.calendar_today, color: Colors.white),
                     onPressed: () => _chonNgay(context),
                   ),
                 ],
               ),
               SizedBox(height: 16),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-               
                     String maLop = _maLopController.text;
                     String tenLop = _tenLopController.text;
                     String ngayTao = DateFormat('yyyy-MM-dd').format(_ngayTao);
@@ -86,7 +121,12 @@ class _CreateClassPageState extends State<CreateClassPage> {
                     print('Day: $ngayTao');
                   }
                 },
-                child: Text('Create Class'),
+                child: Text(
+                  'Create Class',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ],
           ),

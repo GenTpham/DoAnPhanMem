@@ -5,6 +5,44 @@ import 'package:exam_app/services/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class MyButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+  final Color? color;
+  final Color? textColor; 
+
+  const MyButton({
+    required this.text,
+    required this.onTap,
+    this.color, 
+    this.textColor, 
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: color ?? Theme.of(context).primaryColor, 
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: textColor ?? Colors.white, 
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ProfilePage extends StatefulWidget {
   final String uid;
   const ProfilePage({
@@ -40,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFF5268B6),
       appBar: AppBar(
         title: Text(_isLoading ? '' : user!.email),
       ),
@@ -54,6 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Icon(
                   Icons.person,
                   size: 100,
+                  color: Colors.white,
                 ),
                 const SizedBox(
                   height: 20,
@@ -63,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(
@@ -74,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(
@@ -83,6 +122,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 MyButton(
                   text: "Edit Profile",
                   onTap: () {},
+                  color: Colors.white,
+                  textColor: Colors.black,
                 ),
                 const SizedBox(
                   height: 20,
@@ -90,6 +131,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 MyButton(
                   text: "Change Password",
                   onTap: () {},
+                  color: Colors.white,
+                  textColor: Colors.black,
                 ),
                 const SizedBox(
                   height: 20,
@@ -97,6 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 MyButton(
                   text: "Grade",
                   onTap: () {},
+                  color: Colors.white,
+                  textColor: Colors.black,
                 ),
                 const SizedBox(
                   height: 20,
@@ -104,6 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 MyButton(
                   text: "Delete Account",
                   onTap: () {},
+                  color: Colors.white,
+                  textColor: Colors.black,
                 ),
               ],
             ),

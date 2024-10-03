@@ -67,8 +67,17 @@ class _GoToClassPageState extends State<GoToClassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
-        title: Text("Class"),
+        backgroundColor: Color(0xFF5268B6),
+        title: const Text(
+            "CLASS",
+            style: TextStyle(
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            )
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -77,9 +86,14 @@ class _GoToClassPageState extends State<GoToClassPage> {
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search for class code or class name',
+                hintText: 'Search for class code or class name',
                 prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black), 
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
               ),
               onChanged: (value) {
                 _filterClasses(value);
