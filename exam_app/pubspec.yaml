@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^5.2.0
   cloud_firestore: ^5.4.0
   intl: ^0.17.0
+  mailer: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

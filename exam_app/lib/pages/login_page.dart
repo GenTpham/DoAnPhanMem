@@ -1,6 +1,7 @@
 import 'package:exam_app/components/my_button.dart';
 import 'package:exam_app/components/my_loading_circle.dart';
 import 'package:exam_app/components/my_text_field.dart';
+import 'package:exam_app/pages/forgot_pass_page.dart';
 import 'package:exam_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -96,20 +97,28 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
+                    child: TextButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPassPage(),
+                        ),
+                      ),
+                      child: Text(
+                        "Quên mật khẩu?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   MyButton(
                     text: "LOGIN",
