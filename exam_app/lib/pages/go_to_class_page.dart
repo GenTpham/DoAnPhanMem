@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'class_page.dart';
 class GoToClassPage extends StatefulWidget {
   @override
   _GoToClassPageState createState() => _GoToClassPageState();
@@ -8,9 +8,9 @@ class GoToClassPage extends StatefulWidget {
 class _GoToClassPageState extends State<GoToClassPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> _classes = [
-    {'code': 'CS101', 'name': 'Computer Science 101'},
-    {'code': 'MATH202', 'name': 'Advanced Mathematics'},
-    {'code': 'PHY303', 'name': 'Physics III'},
+    {'code': 'CL01', 'name': 'DoAnPhanMem'},
+    {'code': 'CL02', 'name': 'MayHoc'},
+    {'code': 'CL03', 'name': 'THiGiacMayTinh'},
   ];
 
   List<Map<String, String>> _filteredClasses = [];
@@ -35,28 +35,36 @@ class _GoToClassPageState extends State<GoToClassPage> {
     });
   }
 
-  void _showConfirmationDialog(String className) {
+  void _showConfirmationDialog(String className, String classCode) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm'),
-          content: Text('You want go to class $className?'),
+          title: Text('Xác nhận'),
+          content: Text('Bạn có muốn vào lớp $className không?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop(); // Đóng hộp thoại
               },
-              child: Text('Cancel'),
+              child: Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
-               
-                print('Successfully entered class: $className');
-                
+                Navigator.of(context).pop(); // Đóng hộp thoại
+
+                // Điều hướng sang ClassPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClassPage(
+                      className: className,
+                      classCode: classCode,
+                    ),
+                  ),
+                );
               },
-              child: Text('Confirm'),
+              child: Text('Xác nhận'),
             ),
           ],
         );
@@ -64,19 +72,20 @@ class _GoToClassPageState extends State<GoToClassPage> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         backgroundColor: Color(0xFF5268B6),
         title: const Text(
-            "CLASS",
-            style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            )
+          "CLASS",
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
         ),
       ),
       body: Padding(
@@ -89,11 +98,11 @@ class _GoToClassPageState extends State<GoToClassPage> {
                 hintText: 'Search for class code or class name',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black), 
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                ),
               ),
               onChanged: (value) {
                 _filterClasses(value);
@@ -110,7 +119,7 @@ class _GoToClassPageState extends State<GoToClassPage> {
                           title: Text(classData['name']!),
                           subtitle: Text('Class Code: ${classData['code']}'),
                           onTap: () {
-                            _showConfirmationDialog(classData['name']!);
+                            _showConfirmationDialog(classData['name']!, classData['code']!);
                           },
                         );
                       },
@@ -123,3 +132,4 @@ class _GoToClassPageState extends State<GoToClassPage> {
     );
   }
 }
+

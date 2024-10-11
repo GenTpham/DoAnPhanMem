@@ -84,13 +84,13 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  _buildButton(
-                    icon: Icons.star,
-                    label: "Rate",
-                    onTap: () {
-                      // Rate
-                    },
-                  ),
+                      _buildButton(
+                        icon: Icons.star,
+                        label: "Rate",
+                        onTap: () {
+                        // Rate
+                        },
+                      ),
                 ],
               ),
             ),
