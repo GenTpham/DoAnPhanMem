@@ -1,7 +1,9 @@
 import 'package:exam_app/components/my_drawer.dart';
+import 'package:exam_app/pages/create_class.dart';
+import 'package:exam_app/pages/join_class.dart';
+import 'package:exam_app/pages/my_class_page.dart';
 import 'package:flutter/material.dart';
 import 'create_class_page.dart';
-import 'go_to_class_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -19,14 +21,12 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color(0xFF5268B6),
       drawer: MyDrawer(),
       appBar: AppBar(
-        title: const Text(
-            "H O M E",
+        title: const Text("H O M E",
             style: TextStyle(
               color: Color(0xFF5268B6),
               fontWeight: FontWeight.bold,
               fontSize: 24,
-            )
-        ),
+            )),
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: SafeArea(
@@ -60,11 +60,10 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.add_circle,
                         label: "Create Class",
                         onTap: () {
-                          
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateClassPage(), 
+                              builder: (context) => CreateClassScreen(),
                             ),
                           );
                         },
@@ -73,24 +72,30 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.school,
                         label: "Go to Class",
                         onTap: () {
-                         Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GoToClassPage(),
+                              builder: (context) => JoinClassScreen(),
                             ),
-                         );
+                          );
                         },
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
-                      _buildButton(
-                        icon: Icons.star,
-                        label: "Rate",
-                        onTap: () {
-                        // Rate
-                        },
-                      ),
+                  _buildButton(
+                    icon: Icons.star,
+                    label: "Rate",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => JoinedClassesPage()),
+                      );
+
+                      // Rate
+                    },
+                  ),
                 ],
               ),
             ),
