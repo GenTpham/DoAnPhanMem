@@ -200,6 +200,7 @@ class DatabaseService {
       return [];
     }
   }
+
   // Create a new exam in a class
   Future<String?> createExam({
     required String classId,
@@ -211,7 +212,7 @@ class DatabaseService {
   }) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       // Check if user is a teacher
       DocumentSnapshot memberDoc = await _db
           .collection("Classes")
@@ -219,16 +220,13 @@ class DatabaseService {
           .collection("Members")
           .doc(uid)
           .get();
-          
+
       if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
         throw 'Only teachers can create exams';
       }
 
-      DocumentReference examDoc = await _db
-          .collection("Classes")
-          .doc(classId)
-          .collection("Exams")
-          .add({
+      DocumentReference examDoc =
+          await _db.collection("Classes").doc(classId).collection("Exams").add({
         'title': examTitle,
         'description': description,
         'createdBy': uid,
@@ -252,11 +250,11 @@ class DatabaseService {
     required String examId,
     required String questionText,
     required List<String> options,
-    required int correctOptionIndex,
+    required List<int> correctOptionIndices,
   }) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       // Verify teacher permission
       DocumentSnapshot memberDoc = await _db
           .collection("Classes")
@@ -264,7 +262,7 @@ class DatabaseService {
           .collection("Members")
           .doc(uid)
           .get();
-          
+
       if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
         throw 'Only teachers can add questions';
       }
@@ -278,7 +276,7 @@ class DatabaseService {
           .add({
         'questionText': questionText,
         'options': options,
-        'correctOptionIndex': correctOptionIndex,
+        'correctOptionIndices': correctOptionIndices,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -340,7 +338,7 @@ class DatabaseService {
   Future<void> publishExam(String classId, String examId) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       // Verify teacher permission
       DocumentSnapshot memberDoc = await _db
           .collection("Classes")
@@ -348,7 +346,7 @@ class DatabaseService {
           .collection("Members")
           .doc(uid)
           .get();
-          
+
       if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
         throw 'Only teachers can publish exams';
       }
@@ -363,11 +361,12 @@ class DatabaseService {
       print('Error publishing exam: $e');
     }
   }
+
   // Bắt đầu làm bài thi
   Future<void> startExam(String classId, String examId) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       await _db
           .collection("Classes")
           .doc(classId)
@@ -395,7 +394,7 @@ class DatabaseService {
   }) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       // Lấy danh sách câu hỏi và đáp án đúng
       QuerySnapshot questionSnapshot = await _db
           .collection("Classes")
@@ -404,22 +403,24 @@ class DatabaseService {
           .doc(examId)
           .collection("Questions")
           .get();
-          
+
       int correctAnswers = 0;
       int totalQuestions = questionSnapshot.docs.length;
-      
+
       // Tính điểm
       for (var doc in questionSnapshot.docs) {
         String questionId = doc.id;
-        int correctOption = doc.get('correctOptionIndex');
-        
-        if (answers[questionId] == correctOption) {
+        List<int> correctOptionIndices =
+            List.from(doc.get('correctOptionIndices'));
+
+        if (answers[questionId] != null &&
+            correctOptionIndices.contains(answers[questionId]!)) {
           correctAnswers++;
         }
       }
-      
+
       double score = (correctAnswers / totalQuestions) * 10;
-      
+
       // Lưu kết quả
       await _db
           .collection("Classes")
@@ -435,7 +436,6 @@ class DatabaseService {
         'status': 'completed',
         'timeSpent': endTime.difference(startTime).inMinutes,
       });
-      
       return score;
     } catch (e) {
       print('Error submitting exam: $e');
@@ -444,10 +444,11 @@ class DatabaseService {
   }
 
   // Kiểm tra trạng thái làm bài
-  Future<Map<String, dynamic>?> checkExamStatus(String classId, String examId) async {
+  Future<Map<String, dynamic>?> checkExamStatus(
+      String classId, String examId) async {
     try {
       String uid = _auth.currentUser!.uid;
-      
+
       DocumentSnapshot submissionDoc = await _db
           .collection("Classes")
           .doc(classId)
@@ -456,14 +457,14 @@ class DatabaseService {
           .collection("Submissions")
           .doc(uid)
           .get();
-          
+
       if (submissionDoc.exists) {
         return {
           'status': submissionDoc.get('status'),
           'score': submissionDoc.get('score'),
         };
       }
-      
+
       return null;
     } catch (e) {
       print('Error checking exam status: $e');

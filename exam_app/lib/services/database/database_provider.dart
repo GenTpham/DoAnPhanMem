@@ -9,14 +9,13 @@ class DatabaseProvider extends ChangeNotifier {
   final _db = DatabaseService();
   final _auth = AuthService();
   User? get currentUser => _auth.getCurrentUser();
-  
+
   bool get isTeacher {
     if (currentUser == null || _classMembers.isEmpty) return false;
-    return _classMembers.any((member) => 
-      member['email'] == currentUser?.email && 
-      member['role'] == 'teacher'
-    );
+    return _classMembers.any((member) =>
+        member['email'] == currentUser?.email && member['role'] == 'teacher');
   }
+
   bool _isLoading = false;
   String? _error;
 
@@ -28,7 +27,7 @@ class DatabaseProvider extends ChangeNotifier {
   Future<String?> createClass(String className) async {
     try {
       String? classCode = await _db.createClass(className: className);
-      await fetchJoinedClasses(); 
+      await fetchJoinedClasses();
       return classCode;
     } catch (e) {
       _error = e.toString();
@@ -36,7 +35,6 @@ class DatabaseProvider extends ChangeNotifier {
       return null;
     }
   }
-  
 
   Future<void> addMemberToClass(String classId, String email) async {
     await _db.addMemberToClass(classId: classId, email: email);
@@ -69,14 +67,14 @@ class DatabaseProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> _classMembers = [];
   List<Map<String, dynamic>> get classMembers => _classMembers;
-  
+
   Future<void> fetchClassMembers(String classId) async {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       _classMembers = await _db.getClassMembers(classId);
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -85,6 +83,7 @@ class DatabaseProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   List<Map<String, dynamic>> _classExams = [];
   List<Map<String, dynamic>> get classExams => _classExams;
 
@@ -113,10 +112,10 @@ class DatabaseProvider extends ChangeNotifier {
       );
 
       await fetchClassExams(classId);
-      
+
       _isLoading = false;
       notifyListeners();
-      
+
       return examId;
     } catch (e) {
       _isLoading = false;
@@ -131,7 +130,7 @@ class DatabaseProvider extends ChangeNotifier {
     required String examId,
     required String questionText,
     required List<String> options,
-    required int correctOptionIndex,
+    required List<int> correctOptionIndices,
   }) async {
     try {
       _isLoading = true;
@@ -142,14 +141,14 @@ class DatabaseProvider extends ChangeNotifier {
         examId: examId,
         questionText: questionText,
         options: options,
-        correctOptionIndex: correctOptionIndex,
+        correctOptionIndices: correctOptionIndices,
       );
 
       await fetchExamQuestions(classId, examId);
-      
+
       _isLoading = false;
       notifyListeners();
-      
+
       return questionId;
     } catch (e) {
       _isLoading = false;
@@ -165,7 +164,7 @@ class DatabaseProvider extends ChangeNotifier {
       notifyListeners();
 
       _classExams = await _db.getClassExams(classId);
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -181,7 +180,7 @@ class DatabaseProvider extends ChangeNotifier {
       notifyListeners();
 
       _examQuestions = await _db.getExamQuestions(classId, examId);
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -198,7 +197,7 @@ class DatabaseProvider extends ChangeNotifier {
 
       await _db.publishExam(classId, examId);
       await fetchClassExams(classId);
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -207,6 +206,7 @@ class DatabaseProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> startExam(String classId, String examId) async {
     try {
       await _db.startExam(classId, examId);
@@ -238,7 +238,8 @@ class DatabaseProvider extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>?> checkExamStatus(String classId, String examId) async {
+  Future<Map<String, dynamic>?> checkExamStatus(
+      String classId, String examId) async {
     try {
       return await _db.checkExamStatus(classId, examId);
     } catch (e) {

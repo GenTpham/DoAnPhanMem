@@ -145,77 +145,85 @@ class _ClassDetailPageState extends State<ClassDetailPage>
   void _showAddQuestionDialog(BuildContext context, String examId) {
     final questionController = TextEditingController();
     final optionControllers = List.generate(4, (_) => TextEditingController());
-    int selectedCorrectOption = 0;
+    List<int> selectedCorrectOptions = [];
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Thêm câu hỏi'),
-        content: SingleChildScrollView(
-          child: Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: questionController,
-                  decoration: InputDecoration(labelText: 'Câu hỏi'),
-                  maxLines: 2,
-                ),
-                ...List.generate(4, (index) {
-                  return Row(
-                    children: [
-                      Radio<int>(
-                        value: index,
-                        groupValue: selectedCorrectOption,
-                        onChanged: (value) {
-                          setState(() => selectedCorrectOption = value!);
-                        },
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          controller: optionControllers[index],
-                          decoration: InputDecoration(
-                            labelText: 'Đáp án ${index + 1}',
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('Thêm câu hỏi'),
+          content: SingleChildScrollView(
+            child: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: questionController,
+                    decoration: InputDecoration(labelText: 'Câu hỏi'),
+                    maxLines: 2,
+                  ),
+                  ...List.generate(4, (index) {
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value: selectedCorrectOptions.contains(index),
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                selectedCorrectOptions.add(index);
+                              } else {
+                                selectedCorrectOptions.remove(index);
+                              }
+                            });
+                          },
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            controller: optionControllers[index],
+                            decoration: InputDecoration(
+                              labelText: 'Đáp án ${index + 1}',
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
-              ],
+                      ],
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final options = optionControllers
+                    .map((controller) => controller.text)
+                    .toList();
+
+                await context.read<DatabaseProvider>().addQuestionToExam(
+                      classId: widget.classInfo['classId'],
+                      examId: examId,
+                      questionText: questionController.text,
+                      options: options,
+                      correctOptionIndices: selectedCorrectOptions,
+                    );
+
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Đã thêm câu hỏi thành công')),
+                );
+              },
+              child: Text('Thêm'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Hủy'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final options = optionControllers
-                  .map((controller) => controller.text)
-                  .toList();
-
-              await context.read<DatabaseProvider>().addQuestionToExam(
-                    classId: widget.classInfo['classId'],
-                    examId: examId,
-                    questionText: questionController.text,
-                    options: options,
-                    correctOptionIndex: selectedCorrectOption,
-                  );
-
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Đã thêm câu hỏi thành công')),
-              );
-            },
-            child: Text('Thêm'),
-          ),
-        ],
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

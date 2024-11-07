@@ -20,7 +20,7 @@ class TakeExamPage extends StatefulWidget {
 }
 
 class _TakeExamPageState extends State<TakeExamPage> {
-  Map<String, int> answers = {};
+  Map<String, List<int>> answers = {};
   bool isLoading = false;
   bool examStarted = false;
   DateTime? startTime;
@@ -59,6 +59,7 @@ class _TakeExamPageState extends State<TakeExamPage> {
         examStarted = true;
         startTime = DateTime.now();
         remainingTime = widget.examInfo['duration'] * 60; // Convert to seconds
+        answers = {}; // Khởi tạo answers
       });
 
       startTimer();
@@ -103,7 +104,8 @@ class _TakeExamPageState extends State<TakeExamPage> {
       final score = await context.read<DatabaseProvider>().submitExam(
             classId: widget.classId,
             examId: widget.examId,
-            answers: answers,
+            answers: answers.map((questionId, options) => MapEntry(questionId,
+                options.first)), // Chỉ lưu index của đáp án đầu tiên
             startTime: startTime!,
             endTime: DateTime.now(),
           );
@@ -127,8 +129,8 @@ class _TakeExamPageState extends State<TakeExamPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); 
-                Navigator.pop(context); 
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: Text('Đóng'),
             ),
@@ -248,13 +250,22 @@ class _TakeExamPageState extends State<TakeExamPage> {
                             SizedBox(height: 8),
                             ...List<Widget>.generate(
                               question['options'].length,
-                              (optionIndex) => RadioListTile<int>(
+                              (optionIndex) => CheckboxListTile(
                                 title: Text(question['options'][optionIndex]),
-                                value: optionIndex,
-                                groupValue: answers[question['questionId']],
+                                value: answers[question['questionId']]
+                                        ?.contains(optionIndex) ??
+                                    false,
                                 onChanged: (value) {
                                   setState(() {
-                                    answers[question['questionId']] = value!;
+                                    if (value == true) {
+                                      answers
+                                          .putIfAbsent(
+                                              question['questionId'], () => [])
+                                          .add(optionIndex);
+                                    } else {
+                                      answers[question['questionId']]
+                                          ?.remove(optionIndex);
+                                    }
                                   });
                                 },
                               ),
