@@ -224,7 +224,6 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
