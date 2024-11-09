@@ -248,5 +248,23 @@ class DatabaseProvider extends ChangeNotifier {
       return null;
     }
   }
+  List<Map<String, dynamic>> _examScores = [];
+  List<Map<String, dynamic>> get examScores => _examScores;
+
+  Future<void> fetchExamScores(String classId, String examId) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      _examScores = await _db.getExamScores(classId, examId);
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
   
 }

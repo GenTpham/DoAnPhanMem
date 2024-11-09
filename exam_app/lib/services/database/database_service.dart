@@ -471,6 +471,59 @@ class DatabaseService {
       return null;
     }
   }
+  // Lấy điểm của tất cả học sinh trong một bài thi
+  Future<List<Map<String, dynamic>>> getExamScores(String classId, String examId) async {
+    try {
+      // Lấy danh sách học sinh trong lớp
+      QuerySnapshot memberSnapshot = await _db
+          .collection("Classes")
+          .doc(classId)
+          .collection("Members")
+          .where('role', isEqualTo: 'member')
+          .get();
 
+      List<Map<String, dynamic>> scores = [];
+      
+      // Lấy thông tin bài nộp của từng học sinh
+      for (var memberDoc in memberSnapshot.docs) {
+        String studentId = memberDoc.id;
+        String studentEmail = memberDoc.get('email');
+
+        DocumentSnapshot submissionDoc = await _db
+          .collection("Classes")
+          .doc(classId)
+          .collection("Exams")
+          .doc(examId)
+          .collection("Submissions")
+          .doc(studentId)
+          .get();
+
+        Map<String, dynamic> scoreInfo = {
+          'studentId': studentId,
+          'email': studentEmail,
+          'status': 'not_started',
+          'score': null,
+          'timeSpent': null,
+          'submittedAt': null,
+        };
+
+        if (submissionDoc.exists) {
+          scoreInfo.update('status', (_) => submissionDoc.get('status'));
+          if (submissionDoc.get('status') == 'completed') {
+            scoreInfo.update('score', (_) => submissionDoc.get('score'));
+            scoreInfo.update('timeSpent', (_) => submissionDoc.get('timeSpent'));
+            scoreInfo.update('submittedAt', (_) => submissionDoc.get('endTime'));
+          }
+        }
+
+        scores.add(scoreInfo);
+      }
+
+      return scores;
+    } catch (e) {
+      print('Error getting exam scores: $e');
+      return [];
+    }
+  }
   
 }

@@ -16,6 +16,8 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
+  final _memberFormKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
 
   // Controllers for exam creation
   final _titleController = TextEditingController();
@@ -41,6 +43,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     _titleController.dispose();
     _descriptionController.dispose();
     _durationController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -142,6 +145,81 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     );
   }
 
+  void _showAddMemberDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Thêm thành viên'),
+        content: Form(
+          key: _memberFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  hintText: 'Nhập email của thành viên',
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Vui lòng nhập email';
+                  }
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
+                    return 'Email không hợp lệ';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _emailController.clear();
+            },
+            child: Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (_memberFormKey.currentState?.validate() ?? false) {
+                try {
+                  await context.read<DatabaseProvider>().addMemberToClass(
+                        widget.classInfo['classId'],
+                        _emailController.text,
+                      );
+
+                  Navigator.pop(context);
+                  _emailController.clear();
+
+                  // Refresh member list
+                  context
+                      .read<DatabaseProvider>()
+                      .fetchClassMembers(widget.classInfo['classId']);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Đã thêm thành viên thành công')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text('Không thể thêm thành viên: ${e.toString()}')),
+                  );
+                }
+              }
+            },
+            child: Text('Thêm'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showAddQuestionDialog(BuildContext context, String examId) {
     final questionController = TextEditingController();
     final optionControllers = List.generate(4, (_) => TextEditingController());
@@ -224,6 +302,77 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     );
   }
 
+  void _showScoresDialog(
+      BuildContext context, String examId, String examTitle) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Điểm bài thi: $examTitle'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Consumer<DatabaseProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  // Thêm scroll ngang
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DataTable(
+                        columnSpacing: 20, // Giảm khoảng cách giữa các cột
+                        columns: [
+                          DataColumn(label: Text('Email')),
+                          DataColumn(label: Text('Điểm')),
+                          DataColumn(label: Text('Thời gian')),
+                          DataColumn(label: Text('Trạng thái')),
+                        ],
+                        rows: provider.examScores.map((score) {
+                          String status = '';
+                          switch (score['status']) {
+                            case 'completed':
+                              status = 'Đã nộp';
+                              break;
+                            case 'in_progress':
+                              status = 'Đang làm';
+                              break;
+                            case 'not_started':
+                              status = 'Chưa làm';
+                              break;
+                          }
+
+                          return DataRow(cells: [
+                            DataCell(Text(score['email'])),
+                            DataCell(Text(
+                                score['score']?.toStringAsFixed(1) ?? '-')),
+                            DataCell(
+                                Text(score['timeSpent']?.toString() ?? '-')),
+                            DataCell(Text(status)),
+                          ]);
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Đóng'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,7 +403,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
           if (currentUserRole == 'teacher') {
             return FloatingActionButton(
               onPressed: () => _tabController.index == 0
-                  ? null // Handle member management
+                  ? _showAddMemberDialog(context) // Handle member management
                   : _showCreateExamDialog(context),
               child: Icon(Icons.add),
             );
@@ -376,6 +525,21 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                   );
                                 },
                                 child: Text('Xuất bản'),
+                              ),
+                              // Thêm nút xem điểm
+                              TextButton(
+                                onPressed: () {
+                                  provider.fetchExamScores(
+                                    widget.classInfo['classId'],
+                                    exam['examId'],
+                                  );
+                                  _showScoresDialog(
+                                    context,
+                                    exam['examId'],
+                                    exam['title'],
+                                  );
+                                },
+                                child: Text('Xem điểm'),
                               ),
                             ],
                             TextButton(
