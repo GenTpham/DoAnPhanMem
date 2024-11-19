@@ -525,5 +525,54 @@ class DatabaseService {
       return [];
     }
   }
-  
+
+  // Update user profile information
+  Future<void> updateUserProfile({
+    required String uid,
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      await _db.collection("Users").doc(uid).update({
+        'name': name,
+        'phone': phone,
+      });
+    } catch (e) {
+      print('Error updating profile: $e');
+      throw e;
+    }
+  }
+
+  // Change user password
+  Future<void> changePassword(String newPassword) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await user.updatePassword(newPassword);
+      } else {
+        throw 'No user logged in';
+      }
+    } catch (e) {
+      print('Error changing password: $e');
+      throw e;
+    }
+  }
+
+  // Delete user account
+  Future<void> deleteUserAccount() async {
+    try {
+      String uid = _auth.currentUser!.uid;
+      
+      // Delete user data from Firestore
+      await _db.collection("Users").doc(uid).delete();
+      
+      // Delete user authentication account
+      await _auth.currentUser!.delete();
+    } catch (e) {
+      print('Error deleting account: $e');
+      throw e;
+    }
+  }
 }
+  
+

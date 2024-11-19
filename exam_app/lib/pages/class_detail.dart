@@ -508,84 +508,91 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                         Text('Thời gian kết thúc: ${exam['endTime'].toDate()}'),
                         Text('Thời gian làm bài: ${exam['duration']} phút'),
                         SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (provider.isTeacher) ...[
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              if (provider.isTeacher) ...[
+                                TextButton(
+                                  onPressed: () => _showAddQuestionDialog(
+                                      context, exam['examId']),
+                                  child: Text('Thêm câu hỏi'),
+                                ),
+                                SizedBox(
+                                    width: 8), // Thêm khoảng cách giữa các nút
+                                TextButton(
+                                  onPressed: () {
+                                    provider.publishExam(
+                                      widget.classInfo['classId'],
+                                      exam['examId'],
+                                    );
+                                  },
+                                  child: Text('Xuất bản'),
+                                ),
+                                SizedBox(width: 8),
+                                TextButton(
+                                  onPressed: () {
+                                    provider.fetchExamScores(
+                                      widget.classInfo['classId'],
+                                      exam['examId'],
+                                    );
+                                    _showScoresDialog(
+                                      context,
+                                      exam['examId'],
+                                      exam['title'],
+                                    );
+                                  },
+                                  child: Text('Xem điểm'),
+                                ),
+                                SizedBox(width: 8),
+                              ],
                               TextButton(
-                                onPressed: () => _showAddQuestionDialog(
-                                    context, exam['examId']),
-                                child: Text('Thêm câu hỏi'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  provider.publishExam(
+                                onPressed: () async {
+                                  final provider =
+                                      context.read<DatabaseProvider>();
+                                  final examStatus =
+                                      await provider.checkExamStatus(
                                     widget.classInfo['classId'],
                                     exam['examId'],
                                   );
-                                },
-                                child: Text('Xuất bản'),
-                              ),
-                              // Thêm nút xem điểm
-                              TextButton(
-                                onPressed: () {
-                                  provider.fetchExamScores(
-                                    widget.classInfo['classId'],
-                                    exam['examId'],
-                                  );
-                                  _showScoresDialog(
+
+                                  if (examStatus != null &&
+                                      examStatus['status'] == 'completed') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Bạn đã hoàn thành bài thi này với điểm: ${examStatus['score']}'),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  if (!exam['isPublished'] &&
+                                      !provider.isTeacher) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text('Bài thi chưa được xuất bản'),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  Navigator.push(
                                     context,
-                                    exam['examId'],
-                                    exam['title'],
+                                    MaterialPageRoute(
+                                      builder: (context) => TakeExamPage(
+                                        classId: widget.classInfo['classId'],
+                                        examId: exam['examId'],
+                                        examInfo: exam,
+                                      ),
+                                    ),
                                   );
                                 },
-                                child: Text('Xem điểm'),
+                                child: Text('Chi tiết'),
                               ),
                             ],
-                            TextButton(
-                              onPressed: () async {
-                                final provider =
-                                    context.read<DatabaseProvider>();
-                                final examStatus =
-                                    await provider.checkExamStatus(
-                                  widget.classInfo['classId'],
-                                  exam['examId'],
-                                );
-
-                                if (examStatus != null &&
-                                    examStatus['status'] == 'completed') {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Bạn đã hoàn thành bài thi này với điểm: ${examStatus['score']}')),
-                                  );
-                                  return;
-                                }
-
-                                if (!exam['isPublished'] &&
-                                    !provider.isTeacher) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content:
-                                            Text('Bài thi chưa được xuất bản')),
-                                  );
-                                  return;
-                                }
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TakeExamPage(
-                                      classId: widget.classInfo['classId'],
-                                      examId: exam['examId'],
-                                      examInfo: exam,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text('Chi tiết'),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),

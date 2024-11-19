@@ -266,5 +266,63 @@ class DatabaseProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await _db.updateUserProfile(
+        uid: uid,
+        name: name,
+        phone: phone,
+      );
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+      throw e;
+    }
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await _db.changePassword(newPassword);
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+      throw e;
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await _db.deleteUserAccount();
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+      throw e;
+    }
+  }
   
 }
