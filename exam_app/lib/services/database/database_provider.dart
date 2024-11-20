@@ -219,7 +219,8 @@ class DatabaseProvider extends ChangeNotifier {
   Future<double> submitExam({
     required String classId,
     required String examId,
-    required Map<String, int> answers,
+    // Thay đổi kiểu dữ liệu của answers thành Map<String, List<int>>
+    required Map<String, List<int>> answers,
     required DateTime startTime,
     required DateTime endTime,
   }) async {
@@ -227,7 +228,7 @@ class DatabaseProvider extends ChangeNotifier {
       return await _db.submitExam(
         classId: classId,
         examId: examId,
-        answers: answers,
+        answers: answers,  // Truyền answers dạng List<int> vào database service
         startTime: startTime,
         endTime: endTime,
       );

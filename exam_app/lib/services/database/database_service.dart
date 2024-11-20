@@ -384,64 +384,79 @@ class DatabaseService {
     }
   }
 
-  // Nộp bài thi
   Future<double> submitExam({
-    required String classId,
-    required String examId,
-    required Map<String, int> answers,
-    required DateTime startTime,
-    required DateTime endTime,
-  }) async {
-    try {
-      String uid = _auth.currentUser!.uid;
+  required String classId,
+  required String examId,
+  // Thay đổi kiểu dữ liệu của answers để nhận list các đáp án
+  required Map<String, List<int>> answers,
+  required DateTime startTime,
+  required DateTime endTime,
+}) async {
+  try {
+    String uid = _auth.currentUser!.uid;
 
-      // Lấy danh sách câu hỏi và đáp án đúng
-      QuerySnapshot questionSnapshot = await _db
-          .collection("Classes")
-          .doc(classId)
-          .collection("Exams")
-          .doc(examId)
-          .collection("Questions")
-          .get();
+    // Lấy danh sách câu hỏi và đáp án đúng
+    QuerySnapshot questionSnapshot = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .collection("Questions")
+        .get();
 
-      int correctAnswers = 0;
-      int totalQuestions = questionSnapshot.docs.length;
+    double totalPoints = 0;
+    int totalQuestions = questionSnapshot.docs.length;
 
-      // Tính điểm
-      for (var doc in questionSnapshot.docs) {
-        String questionId = doc.id;
-        List<int> correctOptionIndices =
-            List.from(doc.get('correctOptionIndices'));
+    // Tính điểm
+    for (var doc in questionSnapshot.docs) {
+      String questionId = doc.id;
+      List<int> correctOptionIndices = List<int>.from(doc.get('correctOptionIndices'));
+      List<int>? userAnswers = answers[questionId];
 
-        if (answers[questionId] != null &&
-            correctOptionIndices.contains(answers[questionId]!)) {
-          correctAnswers++;
+      // Nếu không có câu trả lời cho câu hỏi này, bỏ qua
+      if (userAnswers == null || userAnswers.isEmpty) continue;
+
+      // Kiểm tra đáp án
+      if (correctOptionIndices.length == 1) {
+        // Câu hỏi một đáp án
+        if (userAnswers.length == 1 && correctOptionIndices.contains(userAnswers[0])) {
+          totalPoints += 1;
+        }
+      } else {
+        // Câu hỏi nhiều đáp án
+        // Chỉ cho điểm khi chọn đúng và đủ tất cả các đáp án
+        if (userAnswers.length == correctOptionIndices.length &&
+            userAnswers.every((answer) => correctOptionIndices.contains(answer)) &&
+            correctOptionIndices.every((correct) => userAnswers.contains(correct))) {
+          totalPoints += 1;
         }
       }
-
-      double score = (correctAnswers / totalQuestions) * 10;
-
-      // Lưu kết quả
-      await _db
-          .collection("Classes")
-          .doc(classId)
-          .collection("Exams")
-          .doc(examId)
-          .collection("Submissions")
-          .doc(uid)
-          .update({
-        'endTime': FieldValue.serverTimestamp(),
-        'answers': answers,
-        'score': score,
-        'status': 'completed',
-        'timeSpent': endTime.difference(startTime).inMinutes,
-      });
-      return score;
-    } catch (e) {
-      print('Error submitting exam: $e');
-      rethrow;
     }
+
+    double score = (totalPoints / totalQuestions) * 10;
+
+    // Lưu kết quả
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .collection("Submissions")
+        .doc(uid)
+        .update({
+      'endTime': FieldValue.serverTimestamp(),
+      'answers': answers,
+      'score': score,
+      'status': 'completed',
+      'timeSpent': endTime.difference(startTime).inMinutes,
+    });
+
+    return score;
+  } catch (e) {
+    print('Error submitting exam: $e');
+    rethrow;
   }
+}
 
   // Kiểm tra trạng thái làm bài
   Future<Map<String, dynamic>?> checkExamStatus(

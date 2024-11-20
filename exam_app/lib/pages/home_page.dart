@@ -3,7 +3,6 @@ import 'package:exam_app/pages/create_class.dart';
 import 'package:exam_app/pages/join_class.dart';
 import 'package:exam_app/pages/my_class_page.dart';
 import 'package:flutter/material.dart';
-import 'create_class_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
