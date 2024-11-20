@@ -573,6 +573,276 @@ class DatabaseService {
       throw e;
     }
   }
+  // Add these methods to DatabaseService class
+
+// Delete exam
+Future<void> deleteExam(String classId, String examId) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can delete exams';
+    }
+
+    // Delete all questions in the exam
+    QuerySnapshot questionsSnapshot = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .collection("Questions")
+        .get();
+
+    for (var doc in questionsSnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    // Delete exam document
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .delete();
+  } catch (e) {
+    print('Error deleting exam: $e');
+    throw e;
+  }
+}
+
+// Update exam details
+Future<void> updateExam({
+  required String classId,
+  required String examId,
+  required String examTitle,
+  required String description,
+  required DateTime startTime,
+  required DateTime endTime,
+  required int duration,
+}) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can update exams';
+    }
+
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .update({
+      'title': examTitle,
+      'description': description,
+      'startTime': startTime,
+      'endTime': endTime,
+      'duration': duration,
+    });
+  } catch (e) {
+    print('Error updating exam: $e');
+    throw e;
+  }
+}
+
+// Delete question from exam
+Future<void> deleteQuestion(String classId, String examId, String questionId) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can delete questions';
+    }
+
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .collection("Questions")
+        .doc(questionId)
+        .delete();
+  } catch (e) {
+    print('Error deleting question: $e');
+    throw e;
+  }
+}
+
+// Update question
+Future<void> updateQuestion({
+  required String classId,
+  required String examId,
+  required String questionId,
+  required String questionText,
+  required List<String> options,
+  required List<int> correctOptionIndices,
+}) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can update questions';
+    }
+
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .doc(examId)
+        .collection("Questions")
+        .doc(questionId)
+        .update({
+      'questionText': questionText,
+      'options': options,
+      'correctOptionIndices': correctOptionIndices,
+    });
+  } catch (e) {
+    print('Error updating question: $e');
+    throw e;
+  }
+}
+
+// Remove member from class
+Future<void> removeMemberFromClass(String classId, String userId) async {
+  try {
+    String currentUid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot teacherDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(currentUid)
+        .get();
+
+    if (!teacherDoc.exists || teacherDoc.get('role') != 'teacher') {
+      throw 'Only teachers can remove members';
+    }
+
+    await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(userId)
+        .delete();
+  } catch (e) {
+    print('Error removing member: $e');
+    throw e;
+  }
+}
+
+// Update class details
+Future<void> updateClass({
+  required String classId,
+  required String className,
+}) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can update class details';
+    }
+
+    await _db.collection("Classes").doc(classId).update({
+      'className': className,
+    });
+  } catch (e) {
+    print('Error updating class: $e');
+    throw e;
+  }
+}
+
+// Delete class
+Future<void> deleteClass(String classId) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    
+    // Verify teacher permission
+    DocumentSnapshot memberDoc = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .doc(uid)
+        .get();
+
+    if (!memberDoc.exists || memberDoc.get('role') != 'teacher') {
+      throw 'Only teachers can delete classes';
+    }
+
+    // Delete all members
+    QuerySnapshot membersSnapshot = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Members")
+        .get();
+    for (var doc in membersSnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    // Delete all exams and their questions
+    QuerySnapshot examsSnapshot = await _db
+        .collection("Classes")
+        .doc(classId)
+        .collection("Exams")
+        .get();
+    for (var examDoc in examsSnapshot.docs) {
+      // Delete questions for each exam
+      QuerySnapshot questionsSnapshot = await examDoc.reference
+          .collection("Questions")
+          .get();
+      for (var questionDoc in questionsSnapshot.docs) {
+        await questionDoc.reference.delete();
+      }
+      await examDoc.reference.delete();
+    }
+
+    // Finally delete the class
+    await _db.collection("Classes").doc(classId).delete();
+  } catch (e) {
+    print('Error deleting class: $e');
+    throw e;
+  }
+}
 }
   
 

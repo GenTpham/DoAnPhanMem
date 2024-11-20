@@ -324,5 +324,167 @@ class DatabaseProvider extends ChangeNotifier {
       throw e;
     }
   }
-  
+  // Add these methods to DatabaseProvider class
+
+Future<void> deleteExam(String classId, String examId) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.deleteExam(classId, examId);
+    await fetchClassExams(classId);
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> updateExam({
+  required String classId,
+  required String examId,
+  required String examTitle,
+  required String description,
+  required DateTime startTime,
+  required DateTime endTime,
+  required int duration,
+}) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.updateExam(
+      classId: classId,
+      examId: examId,
+      examTitle: examTitle,
+      description: description,
+      startTime: startTime,
+      endTime: endTime,
+      duration: duration,
+    );
+    await fetchClassExams(classId);
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> deleteQuestion(String classId, String examId, String questionId) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.deleteQuestion(classId, examId, questionId);
+    await fetchExamQuestions(classId, examId);
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> updateQuestion({
+  required String classId,
+  required String examId,
+  required String questionId,
+  required String questionText,
+  required List<String> options,
+  required List<int> correctOptionIndices,
+}) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.updateQuestion(
+      classId: classId,
+      examId: examId,
+      questionId: questionId,
+      questionText: questionText,
+      options: options,
+      correctOptionIndices: correctOptionIndices,
+    );
+    await fetchExamQuestions(classId, examId);
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> removeMemberFromClass(String classId, String userId) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.removeMemberFromClass(classId, userId);
+    await fetchClassMembers(classId);
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> updateClass({
+  required String classId,
+  required String className,
+}) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.updateClass(
+      classId: classId,
+      className: className,
+    );
+    await fetchJoinedClasses();
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
+
+Future<void> deleteClass(String classId) async {
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    await _db.deleteClass(classId);
+    await fetchJoinedClasses();
+
+    _isLoading = false;
+    notifyListeners();
+  } catch (e) {
+    _isLoading = false;
+    _error = e.toString();
+    notifyListeners();
+    throw e;
+  }
+}
 }

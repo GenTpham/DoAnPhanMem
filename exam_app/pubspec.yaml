@@ -41,7 +41,7 @@ dependencies:
   cloud_firestore: ^5.4.0
   intl: ^0.17.0
   mailer: ^5.0.0
-  package_info_plus: ^5.0.1
+  package_info_plus: 8.1.1
   url_launcher: ^6.2.4 
 dev_dependencies:
   flutter_test:
