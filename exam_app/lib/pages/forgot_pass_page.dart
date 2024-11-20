@@ -28,7 +28,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
   void startTimer() {
     _seconds = 60;
     _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_seconds > 0) {
           _seconds--;
@@ -53,7 +53,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
+            return const AlertDialog(
               content: Text('Đã gửi link đổi mật khẩu! Xem tại Email của bạn'),
             );
           });
@@ -147,13 +147,13 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: 50,
                     width: 200,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all(Colors.blue),
+                        backgroundColor: WidgetStateProperty.all(Colors.blue),
+                        foregroundColor: WidgetStateProperty.all(Colors.blue),
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

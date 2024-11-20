@@ -18,12 +18,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF5268B6),
+      backgroundColor: const Color(0xFF3572EF),
       drawer: MyDrawer(),
       appBar: AppBar(
         title: const Text("H O M E",
             style: TextStyle(
-              color: Color(0xFF5268B6),
+              color: Color(0xFF133E87),
               fontWeight: FontWeight.bold,
               fontSize: 24,
             )),
@@ -32,10 +32,10 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Text(
                   "GD EXAM",
                   style: TextStyle(
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       _buildButton(
                         icon: Icons.add_circle,
-                        label: "Create Class",
+                        label: "Tạo Lớp",
                         onTap: () {
                           Navigator.push(
                             context,
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       _buildButton(
                         icon: Icons.school,
-                        label: "Go to Class",
+                        label: "Vào Lớp",
                         onTap: () {
                           Navigator.push(
                             context,
@@ -82,10 +82,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildButton(
-                    icon: Icons.star,
-                    label: "Rate",
+                    icon: Icons.list_alt_outlined,
+                    label: "Danh Sách Lớp",
                     onTap: () {
                       Navigator.push(
                         context,
@@ -93,7 +93,6 @@ class _HomePageState extends State<HomePage> {
                             builder: (context) => JoinedClassesPage()),
                       );
 
-                      // Rate
                     },
                   ),
                 ],
@@ -122,9 +121,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: Color(0xFF5268B6)),
-            SizedBox(height: 10),
-            Text(label, style: TextStyle(fontSize: 16)),
+            Icon(icon, size: 50, color: const Color(0xFF133E87)),
+            const SizedBox(height: 10),
+            Text(label, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),

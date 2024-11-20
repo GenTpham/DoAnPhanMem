@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exam_app/services/database/database_provider.dart';
 import 'package:exam_app/services/auth/auth_service.dart';
-import 'package:exam_app/components/my_button.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -23,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   UserProfile? user;
   String currentUserId = AuthService().getCurrentUid();
   bool _isLoading = true;
-  
+
   // Controllers for edit profile
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
@@ -115,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _showChangePasswordDialog() async {
     _passwordController.clear();
     _confirmPasswordController.clear();
-    
+
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -210,9 +209,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF5268B6),
+      backgroundColor: const Color(0xFF3572EF),
       appBar: AppBar(
-        title: Text(_isLoading ? '' : user!.email),
+        title: Text(
+          _isLoading ? '' : user!.email,
+          style: TextStyle(
+            color: Color(0xFF133E87),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -228,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  _isLoading ? '' : '${user!.name}',
+                  _isLoading ? '' : user!.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -245,22 +249,37 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                MyButton(
-                  text: "Edit Profile",
-                  onTap: _showEditProfileDialog,
-                ),
+                _buildCustomButton("Edit Profile", _showEditProfileDialog),
                 const SizedBox(height: 20),
-                MyButton(
-                  text: "Change Password",
-                  onTap: _showChangePasswordDialog,
-                ),
+                _buildCustomButton("Change Password", _showChangePasswordDialog),
                 const SizedBox(height: 20),
-                MyButton(
-                  text: "Delete Account",
-                  onTap: _showDeleteAccountDialog,
-                ),
+                _buildCustomButton("Delete Account", _showDeleteAccountDialog),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCustomButton(String text, VoidCallback onTap) {
+    return Container(
+      width: double.infinity, 
+      height: 50, 
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: const BorderSide(color: Colors.black), 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8), 
+          ),
+        ),
+        onPressed: onTap,
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.black, 
+            fontSize: 16,
           ),
         ),
       ),

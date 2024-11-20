@@ -1,7 +1,4 @@
 import 'package:exam_app/firebase_options.dart';
-import 'package:exam_app/pages/change_pass_page.dart';
-import 'package:exam_app/pages/forgot_pass_page.dart';
-import 'package:exam_app/pages/home_page.dart';
 import 'package:exam_app/services/auth/auth_gate.dart';
 import 'package:exam_app/services/database/database_provider.dart';
 import 'package:exam_app/themes/theme_provider.dart';

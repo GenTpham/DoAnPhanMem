@@ -471,7 +471,12 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text("S E T T I N G S"),
+        title: const Text("S E T T I N G S",
+            style: TextStyle(
+              color: Color(0xFF133E87),
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            )),
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Consumer<DatabaseProvider>(
@@ -479,7 +484,6 @@ class _SettingsPageState extends State<SettingsPage> {
           return ListView(
             children: [
               const SizedBox(height: 20),
-
               // Account Section
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

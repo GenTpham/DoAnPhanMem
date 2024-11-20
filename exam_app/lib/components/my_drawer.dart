@@ -1,5 +1,4 @@
 import 'package:exam_app/components/my_drawer_tile.dart';
-import 'package:exam_app/components/my_loading_circle.dart';
 import 'package:exam_app/pages/my_class_page.dart';
 import 'package:exam_app/pages/profile_page.dart';
 import 'package:exam_app/pages/settings_page.dart';
@@ -29,8 +28,8 @@ class MyDrawer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Icon(
                   Icons.person,
+                  color: Color(0xFF3572EF),
                   size: 72,
-                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               Divider(
@@ -76,7 +75,7 @@ class MyDrawer extends StatelessWidget {
               ),
               MyDrawerTile(
                 title: "M Y C L A S S",
-                icon: Icons.settings,
+                icon: Icons.list_alt_outlined,
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -88,11 +87,13 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
               const Spacer(),
+              // Mục "LOGOUT" có màu chữ đỏ
               MyDrawerTile(
                 title: "L O G O U T",
                 icon: Icons.logout,
                 onTap: logout,
-              )
+                textColor: Colors.red, 
+              ),
             ],
           ),
         ),

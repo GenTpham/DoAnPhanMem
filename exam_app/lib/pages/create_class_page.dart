@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; 
 
 class CreateClassPage extends StatefulWidget {
+  const CreateClassPage({super.key});
+
   @override
   _CreateClassPageState createState() => _CreateClassPageState();
 }
@@ -20,16 +22,17 @@ class _CreateClassPageState extends State<CreateClassPage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _ngayTao)
+    if (picked != null && picked != _ngayTao) {
       setState(() {
         _ngayTao = picked;
       });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF5268B6),
+      backgroundColor: const Color(0xFF5268B6),
       appBar: AppBar(
         title: const Text(
             "CREATE CLASS",
@@ -41,7 +44,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -49,7 +52,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
             children: <Widget>[
               TextFormField(
                 controller: _maLopController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Class Code', 
                   filled: true, 
                   fillColor: Colors.white, 
@@ -67,10 +70,10 @@ class _CreateClassPageState extends State<CreateClassPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _tenLopController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Class Name',
                   filled: true,
                   fillColor: Colors.white,
@@ -88,24 +91,24 @@ class _CreateClassPageState extends State<CreateClassPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Text(
                     'Day: ${DateFormat('yyyy-MM-dd').format(_ngayTao)}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 19, 
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
-                    icon: Icon(Icons.calendar_today, color: Colors.white),
+                    icon: const Icon(Icons.calendar_today, color: Colors.white),
                     onPressed: () => _chonNgay(context),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -121,7 +124,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
                     print('Day: $ngayTao');
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Create Class',
                   style: TextStyle(
                     color: Colors.black,

@@ -380,7 +380,7 @@ class DatabaseService {
       });
     } catch (e) {
       print('Error starting exam: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -439,7 +439,7 @@ class DatabaseService {
       return score;
     } catch (e) {
       print('Error submitting exam: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -539,7 +539,7 @@ class DatabaseService {
       });
     } catch (e) {
       print('Error updating profile: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -554,7 +554,7 @@ class DatabaseService {
       }
     } catch (e) {
       print('Error changing password: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -570,7 +570,7 @@ class DatabaseService {
       await _auth.currentUser!.delete();
     } catch (e) {
       print('Error deleting account: $e');
-      throw e;
+      rethrow;
     }
   }
   // Add these methods to DatabaseService class
@@ -614,7 +614,7 @@ Future<void> deleteExam(String classId, String examId) async {
         .delete();
   } catch (e) {
     print('Error deleting exam: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -657,7 +657,7 @@ Future<void> updateExam({
     });
   } catch (e) {
     print('Error updating exam: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -688,7 +688,7 @@ Future<void> deleteQuestion(String classId, String examId, String questionId) as
         .delete();
   } catch (e) {
     print('Error deleting question: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -730,7 +730,7 @@ Future<void> updateQuestion({
     });
   } catch (e) {
     print('Error updating question: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -759,7 +759,7 @@ Future<void> removeMemberFromClass(String classId, String userId) async {
         .delete();
   } catch (e) {
     print('Error removing member: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -788,7 +788,7 @@ Future<void> updateClass({
     });
   } catch (e) {
     print('Error updating class: $e');
-    throw e;
+    rethrow;
   }
 }
 
@@ -840,7 +840,7 @@ Future<void> deleteClass(String classId) async {
     await _db.collection("Classes").doc(classId).delete();
   } catch (e) {
     print('Error deleting class: $e');
-    throw e;
+    rethrow;
   }
 }
 }

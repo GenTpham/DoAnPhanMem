@@ -6,14 +6,23 @@ class CreateClassScreen extends StatelessWidget {
   final TextEditingController _classNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  CreateClassScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final databaseProvider =
         Provider.of<DatabaseProvider>(context, listen: false);
 
     return Scaffold(
+      backgroundColor: const Color(0xFF3572EF),
       appBar: AppBar(
-        title: Text('Tạo Lớp Học'),
+        title: const Text("Tạo Lớp Học",
+            style: TextStyle(
+              color: Color(0xFF133E87),
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            )),
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,15 +30,40 @@ class CreateClassScreen extends StatelessWidget {
           children: [
             TextField(
               controller: _classNameController,
-              decoration: InputDecoration(labelText: 'Tên Lớp'),
+              style: const TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                labelText: 'Tên Lớp',
+                labelStyle: const TextStyle(color: Colors.black), 
+                filled: true, 
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
+                  borderRadius: BorderRadius.circular(10), 
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white, width: 3.0),
+                  borderRadius: BorderRadius.circular(10), 
+                ),
+              ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 String className = _classNameController.text;
                 databaseProvider.createClass(className);
               },
-              child: Text('Tạo Lớp'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, 
+                elevation: 0, 
+                side: const BorderSide(color: Colors.white, width: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), 
+                ),
+              ),
+              child: const Text(
+                'Tạo Lớp',
+                style: TextStyle(color: Colors.black),
+               ),
             ),
           ],
         ),

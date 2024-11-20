@@ -9,7 +9,7 @@ class TakeExamPage extends StatefulWidget {
   final String examId;
   final Map<String, dynamic> examInfo;
 
-  TakeExamPage({
+  const TakeExamPage({super.key, 
     required this.classId,
     required this.examId,
     required this.examInfo,
@@ -75,7 +75,7 @@ class _TakeExamPageState extends State<TakeExamPage> {
   }
 
   void startTimer() {
-    examTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    examTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (remainingTime > 0) {
           remainingTime--;
@@ -117,13 +117,13 @@ class _TakeExamPageState extends State<TakeExamPage> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          title: Text('Kết quả bài thi'),
+          title: const Text('Kết quả bài thi'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Điểm số của bạn: ${score.toStringAsFixed(2)}/10'),
-              SizedBox(height: 16),
-              Text('Bạn đã hoàn thành bài thi!'),
+              const SizedBox(height: 16),
+              const Text('Bạn đã hoàn thành bài thi!'),
             ],
           ),
           actions: [
@@ -132,7 +132,7 @@ class _TakeExamPageState extends State<TakeExamPage> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: Text('Đóng'),
+              child: const Text('Đóng'),
             ),
           ],
         ),
@@ -156,17 +156,17 @@ class _TakeExamPageState extends State<TakeExamPage> {
           final shouldPop = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Thoát bài thi?'),
+              title: const Text('Thoát bài thi?'),
               content:
-                  Text('Bạn có chắc muốn thoát? Mọi câu trả lời sẽ bị mất.'),
+                  const Text('Bạn có chắc muốn thoát? Mọi câu trả lời sẽ bị mất.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
-                  child: Text('Không'),
+                  child: const Text('Không'),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, true),
-                  child: Text('Có'),
+                  child: const Text('Có'),
                 ),
               ],
             ),
@@ -182,10 +182,10 @@ class _TakeExamPageState extends State<TakeExamPage> {
             if (examStarted)
               Center(
                 child: Padding(
-                  padding: EdgeInsets.only(right: 16),
+                  padding: const EdgeInsets.only(right: 16),
                   child: Text(
                     'Thời gian: ${formatTime(remainingTime)}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -197,36 +197,65 @@ class _TakeExamPageState extends State<TakeExamPage> {
         body: Consumer<DatabaseProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading || isLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (!examStarted) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Thông tin bài thi',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), 
+                  decoration: BoxDecoration(
+                    color: Colors.white, 
+                    borderRadius: BorderRadius.circular(16), 
+                    border: Border.all(
+                      color: Colors.grey, 
+                      width: 1.5, 
                     ),
-                    SizedBox(height: 16),
-                    Text('Tiêu đề: ${widget.examInfo['title']}'),
-                    Text('Mô tả: ${widget.examInfo['description']}'),
-                    Text('Thời gian: ${widget.examInfo['duration']} phút'),
-                    SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: startExam,
-                      child: Text('Bắt đầu làm bài'),
-                    ),
-                  ],
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+                    children: [
+                      Text(
+                        'Thông tin bài thi',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 16),
+                      Text('Tiêu đề: ${widget.examInfo['title']}'),
+                      Text('Mô tả: ${widget.examInfo['description']}'),
+                      Text('Thời gian: ${widget.examInfo['duration']} phút'),
+                      const SizedBox(height: 24),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: startExam,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF3572EF),
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            'Bắt đầu làm bài',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
 
+
             final questions = provider.examQuestions;
 
             return SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -234,20 +263,20 @@ class _TakeExamPageState extends State<TakeExamPage> {
                     final index = entry.key;
                     final question = entry.value;
                     return Card(
-                      margin: EdgeInsets.only(bottom: 16),
+                      margin: const EdgeInsets.only(bottom: 16),
                       child: Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Câu ${index + 1}: ${question['questionText']}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             ...List<Widget>.generate(
                               question['options'].length,
                               (optionIndex) => CheckboxListTile(
@@ -274,16 +303,27 @@ class _TakeExamPageState extends State<TakeExamPage> {
                         ),
                       ),
                     );
-                  }).toList(),
-                  SizedBox(height: 16),
+                  }),
+                  const SizedBox(height: 16),
                   Center(
-                    child: ElevatedButton(
-                      onPressed: answers.length == questions.length
-                          ? submitExam
-                          : null,
-                      child: Text('Nộp bài'),
-                    ),
-                  ),
+                        child: ElevatedButton(
+                          onPressed: startExam,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF3572EF),
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            'Nộp bài',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
                 ],
               ),
             );

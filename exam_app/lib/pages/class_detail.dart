@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class ClassDetailPage extends StatefulWidget {
   final Map<String, dynamic> classInfo;
 
-  ClassDetailPage({required this.classInfo});
+  const ClassDetailPage({super.key, required this.classInfo});
 
   @override
   _ClassDetailPageState createState() => _ClassDetailPageState();
@@ -23,7 +23,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(Duration(hours: 2));
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 2));
   final _durationController = TextEditingController(text: '120');
 
   @override
@@ -51,7 +51,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Tạo bài thi mới'),
+        title: const Text('Tạo bài thi mới'),
         content: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -60,20 +60,20 @@ class _ClassDetailPageState extends State<ClassDetailPage>
               children: [
                 TextFormField(
                   controller: _titleController,
-                  decoration: InputDecoration(labelText: 'Tên bài thi'),
+                  decoration: const InputDecoration(labelText: 'Tên bài thi'),
                   validator: (value) => value?.isEmpty ?? true
                       ? 'Vui lòng nhập tên bài thi'
                       : null,
                 ),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(labelText: 'Mô tả'),
+                  decoration: const InputDecoration(labelText: 'Mô tả'),
                   maxLines: 2,
                 ),
                 ListTile(
-                  title: Text('Thời gian bắt đầu'),
+                  title: const Text('Thời gian bắt đầu'),
                   subtitle: Text(_startTime.toString()),
-                  trailing: Icon(Icons.calendar_today),
+                  trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDateTimePicker(context, _startTime);
                     if (date != null) {
@@ -82,9 +82,9 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                   },
                 ),
                 ListTile(
-                  title: Text('Thời gian kết thúc'),
+                  title: const Text('Thời gian kết thúc'),
                   subtitle: Text(_endTime.toString()),
-                  trailing: Icon(Icons.calendar_today),
+                  trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDateTimePicker(context, _endTime);
                     if (date != null) {
@@ -94,14 +94,15 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                 ),
                 TextFormField(
                   controller: _durationController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Thời gian làm bài (phút)',
                     suffix: Text('phút'),
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value?.isEmpty ?? true)
+                    if (value?.isEmpty ?? true) {
                       return 'Vui lòng nhập thời gian';
+                    }
                     if (int.tryParse(value!) == null) return 'Phải là số';
                     return null;
                   },
@@ -113,7 +114,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Hủy'),
+            child: const Text('Hủy'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -133,12 +134,12 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                   _titleController.clear();
                   _descriptionController.clear();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Đã tạo bài thi thành công')),
+                    const SnackBar(content: Text('Đã tạo bài thi thành công')),
                   );
                 }
               }
             },
-            child: Text('Tạo'),
+            child: const Text('Tạo'),
           ),
         ],
       ),
@@ -149,7 +150,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Thêm thành viên'),
+        title: const Text('Thêm thành viên'),
         content: Form(
           key: _memberFormKey,
           child: Column(
@@ -157,7 +158,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   hintText: 'Nhập email của thành viên',
                 ),
@@ -182,7 +183,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
               Navigator.pop(context);
               _emailController.clear();
             },
-            child: Text('Hủy'),
+            child: const Text('Hủy'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -202,7 +203,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                       .fetchClassMembers(widget.classInfo['classId']);
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Đã thêm thành viên thành công')),
+                    const SnackBar(content: Text('Đã thêm thành viên thành công')),
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -213,7 +214,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                 }
               }
             },
-            child: Text('Thêm'),
+            child: const Text('Thêm'),
           ),
         ],
       ),
@@ -229,7 +230,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text('Thêm câu hỏi'),
+          title: const Text('Thêm câu hỏi'),
           content: SingleChildScrollView(
             child: Form(
               child: Column(
@@ -237,7 +238,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                 children: [
                   TextFormField(
                     controller: questionController,
-                    decoration: InputDecoration(labelText: 'Câu hỏi'),
+                    decoration: const InputDecoration(labelText: 'Câu hỏi'),
                     maxLines: 2,
                   ),
                   ...List.generate(4, (index) {
@@ -273,7 +274,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Hủy'),
+              child: const Text('Hủy'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -291,10 +292,10 @@ class _ClassDetailPageState extends State<ClassDetailPage>
 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Đã thêm câu hỏi thành công')),
+                  const SnackBar(content: Text('Đã thêm câu hỏi thành công')),
                 );
               },
-              child: Text('Thêm'),
+              child: const Text('Thêm'),
             ),
           ],
         ),
@@ -313,7 +314,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
           child: Consumer<DatabaseProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
 
               return SingleChildScrollView(
@@ -326,7 +327,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                     children: [
                       DataTable(
                         columnSpacing: 20, // Giảm khoảng cách giữa các cột
-                        columns: [
+                        columns: const [
                           DataColumn(label: Text('Email')),
                           DataColumn(label: Text('Điểm')),
                           DataColumn(label: Text('Thời gian')),
@@ -366,7 +367,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Đóng'),
+            child: const Text('Đóng'),
           ),
         ],
       ),
@@ -376,11 +377,20 @@ class _ClassDetailPageState extends State<ClassDetailPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF3572EF),
       appBar: AppBar(
-        title: Text('Chi tiết lớp học'),
+        title: const Text('Chi tiết lớp học',
+        style: TextStyle(
+              color: Color(0xFF133E87),
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+        )),
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          labelColor: Colors.black,
+          indicatorColor: Colors.black, 
+          tabs: const [
             Tab(text: 'Thành viên'),
             Tab(text: 'Bài thi'),
           ],
@@ -405,10 +415,10 @@ class _ClassDetailPageState extends State<ClassDetailPage>
               onPressed: () => _tabController.index == 0
                   ? _showAddMemberDialog(context) // Handle member management
                   : _showCreateExamDialog(context),
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             );
           }
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         },
       ),
     );
@@ -422,6 +432,13 @@ class _ClassDetailPageState extends State<ClassDetailPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8), 
+              side: const BorderSide(
+                color: Colors.black,
+                width: 1.5, 
+              ),
+            ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -431,7 +448,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                       'Thông tin lớp học',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text('Tên lớp: ${widget.classInfo['className']}'),
                     Text('Mã lớp: ${widget.classInfo['classId']}'),
                     Text(
@@ -441,20 +458,27 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Consumer<DatabaseProvider>(
               builder: (context, provider, child) {
                 if (provider.isLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 return ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: provider.classMembers.length,
                   itemBuilder: (context, index) {
                     final member = provider.classMembers[index];
                     return Card(
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8), 
+                      side: const BorderSide(
+                        color: Colors.black, 
+                        width: 1.5, 
+                      ),
+                    ),
                       child: ListTile(
                         leading: CircleAvatar(
                           child: Icon(
@@ -485,15 +509,22 @@ class _ClassDetailPageState extends State<ClassDetailPage>
     return Consumer<DatabaseProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         return ListView.builder(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           itemCount: provider.classExams.length,
           itemBuilder: (context, index) {
             final exam = provider.classExams[index];
             return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), 
+                  side: const BorderSide(
+                  color: Colors.black, 
+                  width: 1.5, 
+                ),
+              ),
               child: ExpansionTile(
                 title: Text(exam['title']),
                 subtitle: Text(exam['description'] ?? ''),
@@ -507,7 +538,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                             'Thời gian bắt đầu: ${exam['startTime'].toDate()}'),
                         Text('Thời gian kết thúc: ${exam['endTime'].toDate()}'),
                         Text('Thời gian làm bài: ${exam['duration']} phút'),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -516,9 +547,25 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                 TextButton(
                                   onPressed: () => _showAddQuestionDialog(
                                       context, exam['examId']),
-                                  child: Text('Thêm câu hỏi'),
+                                  child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 0, 0, 0), 
+                                      width: 2, 
+                                    ),
+                                    borderRadius: BorderRadius.circular(8), 
+                                  ),
+                                  child: const Text(
+                                    'Thêm câu hỏi',
+                                    style: TextStyle(
+                                      color: Color(0xFF3572EF), 
+                                      fontWeight: FontWeight.bold, 
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(
+                                ),
+                                const SizedBox(
                                     width: 8), // Thêm khoảng cách giữa các nút
                                 TextButton(
                                   onPressed: () {
@@ -527,9 +574,25 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                       exam['examId'],
                                     );
                                   },
-                                  child: Text('Xuất bản'),
+                                  child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 0, 0, 0), 
+                                      width: 2, 
+                                    ),
+                                    borderRadius: BorderRadius.circular(8), 
+                                  ),
+                                  child: const Text(
+                                    'Xuất bản',
+                                    style: TextStyle(
+                                      color: Color(0xFF3572EF), 
+                                      fontWeight: FontWeight.bold, 
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(width: 8),
+                                ),
+                                const SizedBox(width: 8),
                                 TextButton(
                                   onPressed: () {
                                     provider.fetchExamScores(
@@ -542,9 +605,25 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                       exam['title'],
                                     );
                                   },
-                                  child: Text('Xem điểm'),
+                                  child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 0, 0, 0), 
+                                      width: 2, 
+                                    ),
+                                    borderRadius: BorderRadius.circular(8), 
+                                  ),
+                                  child: const Text(
+                                    'Xem điểm',
+                                    style: TextStyle(
+                                      color: Color(0xFF3572EF), 
+                                      fontWeight: FontWeight.bold, 
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(width: 8),
+                                ),
+                                const SizedBox(width: 8),
                               ],
                               TextButton(
                                 onPressed: () async {
@@ -570,7 +649,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                   if (!exam['isPublished'] &&
                                       !provider.isTeacher) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                         content:
                                             Text('Bài thi chưa được xuất bản'),
                                       ),
@@ -589,7 +668,23 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                                     ),
                                   );
                                 },
-                                child: Text('Chi tiết'),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 0, 0, 0), 
+                                      width: 2, 
+                                    ),
+                                    borderRadius: BorderRadius.circular(8), 
+                                  ),
+                                  child: const Text(
+                                    'Chi tiết',
+                                    style: TextStyle(
+                                      color: Color(0xFF3572EF), 
+                                      fontWeight: FontWeight.bold, 
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -613,7 +708,7 @@ Future<DateTime?> showDateTimePicker(
     context: context,
     initialDate: initialDate,
     firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(Duration(days: 365)),
+    lastDate: DateTime.now().add(const Duration(days: 365)),
   );
   if (date == null) return null;
 

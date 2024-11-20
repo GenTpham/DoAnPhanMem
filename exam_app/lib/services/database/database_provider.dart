@@ -234,7 +234,7 @@ class DatabaseProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       notifyListeners();
-      throw e;
+      rethrow;
     }
   }
 
@@ -287,7 +287,7 @@ class DatabaseProvider extends ChangeNotifier {
       _isLoading = false;
       _error = e.toString();
       notifyListeners();
-      throw e;
+      rethrow;
     }
   }
 
@@ -304,7 +304,7 @@ class DatabaseProvider extends ChangeNotifier {
       _isLoading = false;
       _error = e.toString();
       notifyListeners();
-      throw e;
+      rethrow;
     }
   }
 
@@ -321,7 +321,7 @@ class DatabaseProvider extends ChangeNotifier {
       _isLoading = false;
       _error = e.toString();
       notifyListeners();
-      throw e;
+      rethrow;
     }
   }
   // Add these methods to DatabaseProvider class
@@ -340,7 +340,7 @@ Future<void> deleteExam(String classId, String examId) async {
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -374,7 +374,7 @@ Future<void> updateExam({
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -392,7 +392,7 @@ Future<void> deleteQuestion(String classId, String examId, String questionId) as
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -424,7 +424,7 @@ Future<void> updateQuestion({
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -442,7 +442,7 @@ Future<void> removeMemberFromClass(String classId, String userId) async {
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -466,7 +466,7 @@ Future<void> updateClass({
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 
@@ -484,7 +484,7 @@ Future<void> deleteClass(String classId) async {
     _isLoading = false;
     _error = e.toString();
     notifyListeners();
-    throw e;
+    rethrow;
   }
 }
 }
